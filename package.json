@@ -1,0 +1,24 @@
+{
+  "name": "snapify",
+  "version": "1.0.0",
+  "description": "A PoC Snapchat username checker.",
+  "main": "Snapify.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "snapchat",
+    "snapify",
+    "motify",
+    "mtfy"
+  ],
+  "author": "https://github.com/mtfy",
+  "license": "ISC",
+  "dependencies": {
+    "chalk.js": "^0.0.5",
+    "console-title": "^1.1.0",
+    "fs": "^0.0.1-security",
+    "readline-sync": "^1.4.10",
+    "request": "^2.88.2"
+  }
+}
