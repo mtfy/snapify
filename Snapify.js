@@ -1,5 +1,4 @@
 const fs = require("fs");
-const setTitle = require("console-title");
 const request = require('request');
 const r = require("readline-sync");
 const chalk = require("chalk");
@@ -17,13 +16,13 @@ const web_client_id = "WEB_CLIENT_ID";
 const usernames = [...new Set(fs.readFileSync("./in.txt", "utf-8").replace(/\r/g, "").split("\n"))]
 check(usernames[i])
 function check(username){
-    if(username){
-        if(username.includes(" ")){
+    if (username) {
+        if (username.includes(" ")) {
             username = username.replace(" ", "_")
         }
     }
     
-    if(i < usernames.length){
+    if (i < usernames.length) {
         const url = `https://accounts.snapchat.com/accounts/get_username_suggestions?requested_username=${username}&xsrf_token=${xsrf_token}`
 
         request.post({
@@ -39,51 +38,49 @@ function check(username){
         }, async(err, body, res) => {
             if(err){
                 unavailable++
-                var date = new Date();
-                var logDate = date.toISOString();
+                let date = new Date();
+                let logDate = date.toISOString();
                 try {
                     fs.writeFileSync(`./errors/${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}_${date.getTimezoneOffset()}.txt`, `[${logDate}] Error : ${err}\r\n\r\n\r\n[RESPONSE BODY]\r\n\r\n${body}`, {
                         encoding: 'utf-8',
                         flag: 'w'
                     });
-               } catch (err) {
+                } catch (err) {
                    console.log(chalk.red(`[${logDate}] Filesystem error -->\n\t${err}`));
                    errors++
-               }
+                }
                 console.log(chalk.red(`[ERROR] ${username} threw an exception! See the log file for more details.`));
-            }else{
-                //console.log(res);
-                try{
+            } else {
+                try {  
                     res = JSON.parse(res).reference.status_code
-                    if(res == "TAKEN"){
+                    if (res == "TAKEN") {
                         taken++
-                        var date = new Date();
-                        var logDate = date.toISOString();
+                        let date = new Date();
+                        let logDate = date.toISOString();
                         console.log(chalk.red(`[${logDate}] Username '${username}' is not available.`));
                     } else if (res == "DELETED") {
                         deleted++
-                        var date = new Date();
-                        var logDate = date.toISOString();
+                        let date = new Date();
+                        let logDate = date.toISOString();
                         console.log(chalk.yellow(`[${logDate}] Username '${username}' is DELETED.`));
-                    }else if(res == "OK"){
+                    } else if (res == "OK") {
                         available++
-
-                        var date = new Date();
-                        var logDate = date.toISOString();
+                        let date = new Date();
+                        let logDate = date.toISOString();
                        
-                       try {
+                        try {
                             fs.writeFileSync('./hits.txt', `[${logDate}] Username '${username}' is available\r\n`, {
                                 encoding: 'utf-8',
                                 flag: 'a+'
                             });
-                       } catch (err) {
+                        } catch (err) {
                            console.log(chalk.red(`[${logDate}] Filesystem error -->\n\t${err}`));
                            errors++
-                       }
+                        }
                        
-                       console.log(chalk.greenBright(`[${logDate}] Username '${username}' is available.`));
+                        console.log(chalk.greenBright(`[${logDate}] Username '${username}' is available.`));
                     }
-                }catch(err){
+                } catch (err) {
                     errors++
                     console.log(err)
                 }
@@ -93,7 +90,7 @@ function check(username){
             i++
             check(usernames[i])
         })
-    }else{
+    } else {
         r.question()
     }
 }
